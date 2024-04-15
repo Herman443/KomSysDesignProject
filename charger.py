@@ -1,31 +1,37 @@
+
 from sense_hat import SenseHat
 import time
 
-# Create an instance of the SenseHat class
 sense = SenseHat()
 
-# Colors
 red = (255, 0, 0)
 green = (0, 255, 0)
 
-# Initially set to red
-current_color = red
+# State Machine
+class ToggleStateMachine:
+    def __init__(self, sense):
+        self.sense = sense
+        self.state = 'charger unconnected'
+        
+    def toggle(self):
+        if self.state == 'charger unconnected':
+            self.state = 'charger connected'
+            self.sense.clear(green)
+            # send message of new state (on)
+        else:
+            self.state = 'charger unconnected'
+            self.sense.clear(red)
+            # send message of new state (off)
 
-def toggle_color():
-    global current_color
-    if current_color == red:
-        current_color = green
-    else:
-        current_color = red
-    sense.clear(current_color)  # Update the display with the new color
 
-# Main loop
+state_machine = ToggleStateMachine(sense)
+
 try:
     while True:
         for event in sense.stick.get_events():
             if event.action == 'pressed':
-                toggle_color()
+                state_machine.toggle()
+                print(state_machine.state)
         time.sleep(0.1)  # Sleep a little to prevent bouncing
-
 except KeyboardInterrupt:
     sense.clear()  # Turn off all LEDs
