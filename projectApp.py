@@ -8,7 +8,7 @@ MQTT_BROKER = "broker.hivemq.com"
 MQTT_PORT = 1883
 
 MQTT_TOPIC_INPUT = "ttm4115/team_15/project/appInput"
-MQTT_TOPIC_OUTPUT = "ttm4115/team_15/project/appOutput"
+MQTT_TOPIC_OUTPUT = "ttm4115/team_15/project/serverInput"
 
 
 class AppComponent:
@@ -33,7 +33,7 @@ class AppComponent:
             try:
                 price = payload.get("price")
                 self.app.clearLabel("label")
-                self.app.setLabel("label", f"Price: {price}")
+                self.app.setLabel("label", f"Price: {price} kWh")
             except Exception as err:
                 self._logger.error("Invalid arguments to topic. {}".format(err))
         else:
@@ -70,7 +70,7 @@ class AppComponent:
             publish_command({"command": "check_price"})
 
         def start_charging():
-            publish_command({"command": "start_charging"})
+            publish_command({"command": "start_charge"})
 
         def reserve15():
             publish_command({"command": "reserve_15"})
