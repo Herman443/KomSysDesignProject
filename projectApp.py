@@ -36,6 +36,36 @@ class AppComponent:
                 self.app.setLabel("label", f"Price: {price} kWh")
             except Exception as err:
                 self._logger.error("Invalid arguments to topic. {}".format(err))
+        elif topic == "unavailable":
+            try:
+                self.app.clearLabel("label")
+                self.app.setLabel("label", f"Charger unavailable")
+            except Exception as err:
+                self._logger.error("Invalid arguments to topic. {}".format(err))
+        elif topic == "reserved":
+            try:
+                self.app.clearLabel("label")
+                self.app.setLabel("label", f"Charger successfully reserved")
+            except Exception as err:
+                self._logger.error("Invalid arguments to topic. {}".format(err))
+        elif topic == "charging":
+            try:
+                self.app.clearLabel("label")
+                self.app.setLabel("label", f"Car is charging")
+            except Exception as err:
+                self._logger.error("Invalid arguments to topic. {}".format(err))
+        elif topic == "charging_stopped":
+            try:
+                self.app.clearLabel("label")
+                self.app.setLabel("label", f"Charging has stopped")
+            except Exception as err:
+                self._logger.error("Invalid arguments to topic. {}".format(err))
+        elif topic == "unreserved":
+            try:
+                self.app.clearLabel("label")
+                self.app.setLabel("label", f"Reservation ran out")
+            except Exception as err:
+                self._logger.error("Invalid arguments to topic. {}".format(err))
         else:
             self._logger.error("Unknown topic {}. Message ignored.".format(topic))
 

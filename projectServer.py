@@ -100,6 +100,36 @@ class ServerComponent:
                 self.publish_command(json.loads(melding), "charger")
             except Exception as err:
                 self._logger.error("Invalid arguments to command. {}".format(err))
+        elif command == "unavailable":
+            try:
+                melding = '{"topic":"unavailable"}'
+                self.publish_command(json.loads(melding), "app")
+            except Exception as err:
+                self._logger.error("Invalid arguments to command. {}".format(err))
+        elif command == "reserved":
+            try:
+                melding = '{"topic":"reserved"}'
+                self.publish_command(json.loads(melding), "app")
+            except Exception as err:
+                self._logger.error("Invalid arguments to command. {}".format(err))
+        elif command == "charging":
+            try:
+                melding = '{"topic":"charging"}'
+                self.publish_command(json.loads(melding), "app")
+            except Exception as err:
+                self._logger.error("Invalid arguments to command. {}".format(err))
+        elif command == "charging_stopped":
+            try:
+                melding = '{"topic":"charging_stopped"}'
+                self.publish_command(json.loads(melding), "app")
+            except Exception as err:
+                self._logger.error("Invalid arguments to command. {}".format(err))
+        elif command == "unreserved":
+            try:
+                melding = '{"topic":"unreserved"}'
+                self.publish_command(json.loads(melding), "app")
+            except Exception as err:
+                self._logger.error("Invalid arguments to command. {}".format(err))
         else:
             self._logger.error("Unknown command {}. Message ignored.".format(command))
 
