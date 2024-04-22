@@ -33,70 +33,6 @@ class ChargerStateMachine:
         self.name = "charger"
         self.sense = sense
         self.state = "unconnected"
-        t0 = {"source": "initial", "target": "idle"}
-        t1 = {
-            "source": "idle",
-            "target": "reserved",
-            "trigger": "reserve15",
-            "effect": "start_15",
-        }
-        t2 = {
-            "source": "idle",
-            "target": "reserved",
-            "trigger": "reserve30",
-            "effect": "start_30",
-        }
-        t3 = {
-            "source": "reserved",
-            "target": "charging",
-            "trigger": "button_press",
-            "effect": "start_charging",
-        }
-        t4 = {
-            "source": "idle",
-            "target": "awaiting",
-            "trigger": "start_charge",
-            "effect": "start_1",
-        }
-        t5 = {
-            "source": "awaiting",
-            "target": "charging",
-            "trigger": "button_press",
-            "effect": "start_charging",
-        }
-        t6 = {
-            "source": "reserved",
-            "target": "idle",
-            "trigger": "t15",
-            "effect": "available",
-        }
-        t7 = {
-            "source": "reserved",
-            "target": "idle",
-            "trigger": "t30",
-            "effect": "available",
-        }
-        t8 = {
-            "source": "awaiting",
-            "target": "idle",
-            "trigger": "t1",
-            "effect": "available",
-        }
-        t9 = {
-            "source": "charging",
-            "target": "idle",
-            "trigger": "button_press",
-            "effect": "stop_charging",
-        }
-        t = ChargerComponent()
-        self.charger_stm = stmpy.Machine(
-            name="charger",
-            transitions=[t0, t1, t2, t3, t4, t5, t6, t7, t8, t9],
-            obj=t,
-        )
-        driver = stmpy.Driver()
-        driver.add_machine(self.charger_stm)
-        driver.start(keep_active=True)
         global available
         available = 1
 
@@ -134,16 +70,6 @@ class ChargerStateMachine:
         ChargerComponent.publish_command({"command": "charging_stopped"})
         global available
         available = 1
-
-    def toggle(self):
-        if self.state == "unconnected":
-            self.state = "connected"
-            self.sense.clear(green)
-            # send message of new state (on)
-        else:
-            self.state = "unconnected"
-            self.sense.clear(red)
-            # send message of new state (off)
 
 
 class ChargerComponent:
@@ -229,6 +155,72 @@ formatter = logging.Formatter(
 )
 ch.setFormatter(formatter)
 logger.addHandler(ch)
+
+t0 = {"source": "initial", "target": "idle"}
+t1 = {
+    "source": "idle",
+    "target": "reserved",
+    "trigger": "reserve15",
+    "effect": "start_15",
+}
+t2 = {
+    "source": "idle",
+    "target": "reserved",
+    "trigger": "reserve30",
+    "effect": "start_30",
+}
+t3 = {
+    "source": "reserved",
+    "target": "charging",
+    "trigger": "button_press",
+    "effect": "start_charging",
+}
+t4 = {
+    "source": "idle",
+    "target": "awaiting",
+    "trigger": "start_charge",
+    "effect": "start_1",
+}
+t5 = {
+    "source": "awaiting",
+    "target": "charging",
+    "trigger": "button_press",
+    "effect": "start_charging",
+}
+t6 = {
+    "source": "reserved",
+    "target": "idle",
+    "trigger": "t15",
+    "effect": "available",
+}
+t7 = {
+    "source": "reserved",
+    "target": "idle",
+    "trigger": "t30",
+    "effect": "available",
+}
+t8 = {
+    "source": "awaiting",
+    "target": "idle",
+    "trigger": "t1",
+    "effect": "available",
+}
+t9 = {
+    "source": "charging",
+    "target": "idle",
+    "trigger": "button_press",
+    "effect": "stop_charging",
+}
+t = ChargerComponent()
+charger_stm = stmpy.Machine(
+    name="charger",
+    transitions=[t0, t1, t2, t3, t4, t5, t6, t7, t8, t9],
+    obj=t
+)
+t.stm = charger_stm
+driver = stmpy.Driver()
+driver.add_machine(charger_stm)
+driver.start(keep_active=True)
 
 
 try:
