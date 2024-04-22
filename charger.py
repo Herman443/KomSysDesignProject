@@ -138,6 +138,9 @@ class ChargerComponent:
         self.mqtt_client.loop_start()
         self._logger.debug("Component initialization finished")
 
+        self.driver = stmpy.Driver()
+        self.driver.start(keep_active=True)
+
     def stop(self):
         """
         Stop the component.
@@ -213,15 +216,12 @@ t9 = {
 }
 t = ChargerComponent()
 charger_stm = stmpy.Machine(
-    name="charger",
-    transitions=[t0, t1, t2, t3, t4, t5, t6, t7, t8, t9],
-    obj=t
+    name="charger", transitions=[t0, t1, t2, t3, t4, t5, t6, t7, t8, t9], obj=t
 )
 t.stm = charger_stm
 driver = stmpy.Driver()
 driver.add_machine(charger_stm)
 driver.start(keep_active=True)
-
 
 try:
     while True:
