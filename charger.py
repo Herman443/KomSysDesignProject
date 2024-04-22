@@ -130,7 +130,6 @@ class ChargerStateMachine:
         charger_logic.stm = charger_stm
         driver = stmpy.Driver()
         driver.add_machine(charger_stm)
-        driver.start()
         return charger_stm
 
     def toggle(self):
