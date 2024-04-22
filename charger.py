@@ -94,9 +94,6 @@ class ChargerStateMachine:
             transitions=[t0, t1, t2, t3, t4, t5, t6, t7, t8, t9],
             obj=self,
         )
-        driver = stmpy.Driver()
-        driver.add_machine(self.charger_stm)
-        driver.start(keep_active=True)
         global available
         available = 1
 
@@ -233,14 +230,16 @@ logger.addHandler(ch)
 t = ChargerComponent()
 
 
-state_machine = ChargerStateMachine(sense=sense, component=t)
+driver = stmpy.Driver()
+driver.add_machine(ChargerStateMachine.charger_stm)
+driver.start(keep_active=True)
 
 try:
     while True:
         for event in sense.stick.get_events():
             if event.action == "pressed":
                 # state_machine.toggle()
-                t.stm_driver.send("button_press", "charger", [], {})
+                driver.stm_driver.send("button_press", "charger", [], {})
         time.sleep(0.1)  # Sleep a little to prevent bouncing
 except KeyboardInterrupt:
     sense.clear()  # Turn off all LEDs
