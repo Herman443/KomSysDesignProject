@@ -64,8 +64,8 @@ class ChargerStateMachine:
         ChargerComponent.publish_command({"command": "charging_stopped"})
         available = 1
 
-    def create_machine(component, name="charger"):
-        charger_logic = ChargerStateMachine(component=component, name=name)
+    def create_machine(component):
+        charger_logic = ChargerStateMachine(component=component, name="charger")
         t0 = {"source": "initial", "target": "idle"}
         t1 = {
             "source": "idle",
