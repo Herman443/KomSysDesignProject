@@ -244,7 +244,7 @@ try:
         for event in sense.stick.get_events():
             if event.action == "pressed":
                 # state_machine.toggle()
-                state_machine.stm_driver.send("button_press", "charger", [], {})
+                t.stm_driver.send("button_press", "charger", [], {})
         time.sleep(0.1)  # Sleep a little to prevent bouncing
 except KeyboardInterrupt:
     sense.clear()  # Turn off all LEDs
