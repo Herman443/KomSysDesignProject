@@ -27,9 +27,9 @@ MQTT_TOPIC_OUTPUT = "ttm4115/team_15/project/serverInput"
 
 
 class ChargerStateMachine:
-    def __init__(self, sense, component):
+    def __init__(self, sense, component, name):
         self._logger = logging.getLogger(__name__)
-        self.name = "charger"
+        self.name = name
         self.component = component
         self.sense = sense
         self.state = "unconnected"
@@ -64,8 +64,8 @@ class ChargerStateMachine:
         ChargerComponent.publish_command({"command": "charging_stopped"})
         available = 1
 
-    def create_machine(component):
-        charger_logic = ChargerStateMachine(component=component)
+    def create_machine(component, name="charger"):
+        charger_logic = ChargerStateMachine(component=component, name=name)
         t0 = {"source": "initial", "target": "idle"}
         t1 = {
             "source": "idle",
