@@ -27,10 +27,10 @@ MQTT_TOPIC_OUTPUT = "ttm4115/team_15/project/serverInput"
 
 
 class ChargerStateMachine:
-    def __init__(self, sense, component, name):
+    def __init__(self, sense, component):
         self._logger = logging.getLogger(__name__)
-        self.name = name
         self.component = component
+        self.name = "charger"
         self.sense = sense
         self.state = "unconnected"
         available = 1
@@ -65,7 +65,7 @@ class ChargerStateMachine:
         available = 1
 
     def create_machine(component):
-        charger_logic = ChargerStateMachine(component=component, name="charger")
+        charger_logic = ChargerStateMachine(component=component)
         t0 = {"source": "initial", "target": "idle"}
         t1 = {
             "source": "idle",
@@ -128,6 +128,9 @@ class ChargerStateMachine:
             obj=charger_logic,
         )
         charger_logic.stm = charger_stm
+        driver = stmpy.Driver()
+        driver.add_machine(charger_stm)
+        driver.start()
         return charger_stm
 
     def toggle(self):
