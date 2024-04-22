@@ -205,6 +205,7 @@ class ChargerComponent:
         self.mqtt_client.loop_start()
 
         self.stm_driver = stmpy.Driver()
+        self.stm_driver.add_machine(ChargerStateMachine.create_machine(self))
         self.stm_driver.start(keep_active=True)
         self._logger.debug("Component initialization finished")
 
