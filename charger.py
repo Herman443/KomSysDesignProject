@@ -33,46 +33,6 @@ class ChargerStateMachine:
         self.name = "charger"
         self.sense = sense
         self.state = "unconnected"
-        global available
-        available = 1
-
-    def start_1(self):
-        self.stm.start_timer("t1", 60000)  # 1 min
-        self.sense.clear(blue)
-        global available
-        available = 0
-
-    def start_15(self):
-        self.stm.start_timer("t15", 900000)  # 15 min
-        self.sense.clear(yellow)
-        global available
-        available = 0
-
-    def start_30(self):
-        self.stm.start_timer("t30", 1800000)  # 30 min
-        self.sense.clear(yellow)
-        global available
-        available = 0
-
-    def available(self):
-        ChargerComponent.publish_command({"command": "unreserved"})
-        global available
-        available = 1
-
-    def start_charging(self):
-        self.sense.clear(red)
-        ChargerComponent.publish_command({"command": "charging"})
-        global available
-        available = 0
-
-    def stop_charging(self):
-        self.sense.clear(green)
-        ChargerComponent.publish_command({"command": "charging_stopped"})
-        global available
-        available = 1
-
-    def create_machine(self, component):
-        charger_logic = ChargerStateMachine(component=component)
         t0 = {"source": "initial", "target": "idle"}
         t1 = {
             "source": "idle",
@@ -130,12 +90,46 @@ class ChargerStateMachine:
         }
 
         self.charger_stm = stmpy.Machine(
-            name="charger",
             transitions=[t0, t1, t2, t3, t4, t5, t6, t7, t8, t9],
-            obj=charger_logic,
+            obj=self,
         )
-        self.charger_logic.stm = self.charger_stm
-        return self.charger_stm
+        global available
+        available = 1
+
+    def start_1(self):
+        self.stm.start_timer("t1", 60000)  # 1 min
+        self.sense.clear(blue)
+        global available
+        available = 0
+
+    def start_15(self):
+        self.stm.start_timer("t15", 900000)  # 15 min
+        self.sense.clear(yellow)
+        global available
+        available = 0
+
+    def start_30(self):
+        self.stm.start_timer("t30", 1800000)  # 30 min
+        self.sense.clear(yellow)
+        global available
+        available = 0
+
+    def available(self):
+        ChargerComponent.publish_command({"command": "unreserved"})
+        global available
+        available = 1
+
+    def start_charging(self):
+        self.sense.clear(red)
+        ChargerComponent.publish_command({"command": "charging"})
+        global available
+        available = 0
+
+    def stop_charging(self):
+        self.sense.clear(green)
+        ChargerComponent.publish_command({"command": "charging_stopped"})
+        global available
+        available = 1
 
     def toggle(self):
         if self.state == "unconnected":
