@@ -32,7 +32,6 @@ class ChargerStateMachine:
         self.component = component
         self.name = "charger"
         self.sense = sense
-        self.state = "unconnected"
         global available
         available = 1
 
