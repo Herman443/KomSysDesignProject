@@ -214,7 +214,7 @@ t9 = {
     "trigger": "button_press",
     "effect": "stop_charging",
 }
-t = ChargerComponent()
+t = ChargerStateMachine()
 charger_stm = stmpy.Machine(
     name="charger", transitions=[t0, t1, t2, t3, t4, t5, t6, t7, t8, t9], obj=t
 )
