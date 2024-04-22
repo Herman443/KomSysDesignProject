@@ -172,6 +172,7 @@ class ChargerComponent:
         self._logger.debug("command of message is {}".format(command))
         if command == "reserve":
             try:
+                global available
                 if available == 0:
                     self.publish_command({"command": "unavailable"})
                 else:
