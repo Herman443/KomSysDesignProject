@@ -94,6 +94,9 @@ class ChargerStateMachine:
             transitions=[t0, t1, t2, t3, t4, t5, t6, t7, t8, t9],
             obj=self,
         )
+        driver = stmpy.Driver()
+        driver.add_machine(self.charger_stm)
+        driver.start(keep_active=True)
         global available
         available = 1
 
@@ -207,9 +210,6 @@ class ChargerComponent:
         self.mqtt_client.connect(MQTT_BROKER, MQTT_PORT)
         self.mqtt_client.subscribe(MQTT_TOPIC_INPUT)
         self.mqtt_client.loop_start()
-
-        self.stm_driver = stmpy.Driver()
-        self.stm_driver.start(keep_active=True)
         self._logger.debug("Component initialization finished")
 
     def stop(self):
