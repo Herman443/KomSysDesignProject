@@ -173,6 +173,7 @@ class ChargerComponent:
         if command == "reserve":
             try:
                 global available
+                print(available)
                 if available == 0:
                     self.publish_command({"command": "unavailable"})
                 else:
