@@ -71,7 +71,7 @@ class ChargerStateMachine:
         global available
         available = 1
 
-    def create_machine(component):
+    def create_machine(self, component):
         charger_logic = ChargerStateMachine(component=component)
         t0 = {"source": "initial", "target": "idle"}
         t1 = {
@@ -129,13 +129,13 @@ class ChargerStateMachine:
             "effect": "stop_charging",
         }
 
-        charger_stm = stmpy.Machine(
+        self.charger_stm = stmpy.Machine(
             name="charger",
             transitions=[t0, t1, t2, t3, t4, t5, t6, t7, t8, t9],
             obj=charger_logic,
         )
-        charger_logic.stm = charger_stm
-        return charger_stm
+        self.charger_logic.stm = self.charger_stm
+        return self.charger_stm
 
     def toggle(self):
         if self.state == "unconnected":
