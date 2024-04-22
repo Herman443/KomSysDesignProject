@@ -17,6 +17,7 @@ blue = (0, 0, 255)
 yellow = (255, 255, 0)
 
 # Avaliability
+global available
 available = 1
 
 # MQTT parameters
@@ -33,36 +34,36 @@ class ChargerStateMachine:
         self.name = "charger"
         self.sense = sense
         self.state = "unconnected"
-        self.available = 1
+        available = 1
 
     def start_1(self):
         self.stm.start_timer("t1", 60000)  # 1 min
         self.sense.clear(blue)
-        self.available = 0
+        available = 0
 
     def start_15(self):
         self.stm.start_timer("t15", 900000)  # 15 min
         self.sense.clear(yellow)
-        self.available = 0
+        available = 0
 
     def start_30(self):
         self.stm.start_timer("t30", 1800000)  # 30 min
         self.sense.clear(yellow)
-        self.available = 0
+        available = 0
 
     def available(self):
         ChargerComponent.publish_command({"command": "unreserved"})
-        self.available = 1
+        available = 1
 
     def start_charging(self):
         self.sense.clear(red)
         ChargerComponent.publish_command({"command": "charging"})
-        self.available = 0
+        available = 0
 
     def stop_charging(self):
         self.sense.clear(green)
         ChargerComponent.publish_command({"command": "charging_stopped"})
-        self.available = 1
+        available = 1
 
     def create_machine(component):
         charger_logic = ChargerStateMachine(component=component)
