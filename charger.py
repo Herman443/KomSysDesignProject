@@ -27,10 +27,9 @@ MQTT_TOPIC_OUTPUT = "ttm4115/team_15/project/serverInput"
 
 
 class ChargerStateMachine:
-    def __init__(self, sense, component):
-        self._logger = logging.getLogger(__name__)
-        self.component = component
-        self.name = "charger"
+    def __init__(self):
+        print("State machine init done!")
+        global sense
         self.sense = sense
         global available
         available = 1
@@ -69,6 +68,64 @@ class ChargerStateMachine:
         ChargerComponent.publish_command({"command": "charging_stopped"})
         global available
         available = 1
+
+
+# Transitions
+t0 = {"source": "initial", "target": "idle"}
+t1 = {
+    "source": "idle",
+    "target": "reserved",
+    "trigger": "reserve15",
+    "effect": "start_15",
+}
+t2 = {
+    "source": "idle",
+    "target": "reserved",
+    "trigger": "reserve30",
+    "effect": "start_30",
+}
+t3 = {
+    "source": "reserved",
+    "target": "charging",
+    "trigger": "button_press",
+    "effect": "start_charging",
+}
+t4 = {
+    "source": "idle",
+    "target": "awaiting",
+    "trigger": "start_charge",
+    "effect": "start_1",
+}
+t5 = {
+    "source": "awaiting",
+    "target": "charging",
+    "trigger": "button_press",
+    "effect": "start_charging",
+}
+t6 = {
+    "source": "reserved",
+    "target": "idle",
+    "trigger": "t15",
+    "effect": "available",
+}
+t7 = {
+    "source": "reserved",
+    "target": "idle",
+    "trigger": "t30",
+    "effect": "available",
+}
+t8 = {
+    "source": "awaiting",
+    "target": "idle",
+    "trigger": "t1",
+    "effect": "available",
+}
+t9 = {
+    "source": "charging",
+    "target": "idle",
+    "trigger": "button_press",
+    "effect": "stop_charging",
+}
 
 
 class ChargerComponent:
@@ -137,9 +194,6 @@ class ChargerComponent:
         self.mqtt_client.loop_start()
         self._logger.debug("Component initialization finished")
 
-        self.driver = stmpy.Driver()
-        self.driver.start(keep_active=True)
-
     def stop(self):
         """
         Stop the component.
@@ -158,68 +212,18 @@ formatter = logging.Formatter(
 ch.setFormatter(formatter)
 logger.addHandler(ch)
 
-t0 = {"source": "initial", "target": "idle"}
-t1 = {
-    "source": "idle",
-    "target": "reserved",
-    "trigger": "reserve15",
-    "effect": "start_15",
-}
-t2 = {
-    "source": "idle",
-    "target": "reserved",
-    "trigger": "reserve30",
-    "effect": "start_30",
-}
-t3 = {
-    "source": "reserved",
-    "target": "charging",
-    "trigger": "button_press",
-    "effect": "start_charging",
-}
-t4 = {
-    "source": "idle",
-    "target": "awaiting",
-    "trigger": "start_charge",
-    "effect": "start_1",
-}
-t5 = {
-    "source": "awaiting",
-    "target": "charging",
-    "trigger": "button_press",
-    "effect": "start_charging",
-}
-t6 = {
-    "source": "reserved",
-    "target": "idle",
-    "trigger": "t15",
-    "effect": "available",
-}
-t7 = {
-    "source": "reserved",
-    "target": "idle",
-    "trigger": "t30",
-    "effect": "available",
-}
-t8 = {
-    "source": "awaiting",
-    "target": "idle",
-    "trigger": "t1",
-    "effect": "available",
-}
-t9 = {
-    "source": "charging",
-    "target": "idle",
-    "trigger": "button_press",
-    "effect": "stop_charging",
-}
-t = ChargerStateMachine(sense=sense, component=ChargerComponent())
-charger_stm = stmpy.Machine(
-    name="charger", transitions=[t0, t1, t2, t3, t4, t5, t6, t7, t8, t9], obj=t
+charger = ChargerStateMachine()
+charger_machine = stmpy.Machine(
+    transitions=[t0, t1, t2, t3, t4, t5, t6, t7, t8, t9], name="charger", obj=charger
 )
-t.stm = charger_stm
+charger.stm = charger_machine
 driver = stmpy.Driver()
-driver.add_machine(charger_stm)
+driver.add_machine(charger_machine)
+
+client = ChargerComponent()
+charger.mqtt_client = client.mqtt_client
+client.stm_driver = driver
+
 driver.start(keep_active=True)
 
 try:
@@ -227,7 +231,7 @@ try:
         for event in sense.stick.get_events():
             if event.action == "pressed":
                 # state_machine.toggle()
-                t.stm_driver.send("button_press", "charger", [], {})
+                client.stm_driver.send("button_press", "charger", [], {})
         time.sleep(0.1)  # Sleep a little to prevent bouncing
 except KeyboardInterrupt:
     sense.clear()  # Turn off all LEDs
