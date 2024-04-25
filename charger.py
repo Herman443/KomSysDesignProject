@@ -54,11 +54,17 @@ class ChargerStateMachine:
 
     def available(self):
         ChargerComponent.publish_command({"command": "unreserved"})
+        self.stm.stop_timer("t1")
+        self.stm.stop_timer("t15")
+        self.stm.stop_timer("t30")
         global available
         available = 1
 
     def start_charging(self):
         self.sense.clear(red)
+        self.stm.stop_timer("t1")
+        self.stm.stop_timer("t15")
+        self.stm.stop_timer("t30")
         ChargerComponent.publish_command({"command": "charging"})
         global available
         available = 0
