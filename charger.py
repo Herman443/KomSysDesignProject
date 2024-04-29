@@ -53,6 +53,8 @@ class ChargerStateMachine:
         available = 0
 
     def available(self):
+        global sense
+        sense.clear(green)
         ChargerComponent.publish_command({"command": "unreserved"})
         self.stm.stop_timer("t1")
         self.stm.stop_timer("t15")
