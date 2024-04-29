@@ -181,7 +181,10 @@ class ChargerComponent:
                 self._logger.error("Invalid arguments to command. {}".format(err))
         elif command == "start_charge":
             try:
-                self.stm_driver.send("start_charge", "charger", [], {})
+                if available == 0:
+                    self.publish_command({"command": "unavailable"})
+                else:
+                    self.stm_driver.send("start_charge", "charger", [], {})
             except Exception as err:
                 self._logger.error("Invalid arguments to command. {}".format(err))
         elif command == "stop_charge":
