@@ -83,13 +83,13 @@ t1 = {
     "source": "idle",
     "target": "reserved",
     "trigger": "reserve15",
-    "effect": "start_15 ; start_timer('t15', 900000)",
+    "effect": "start_15 ; start_timer('t15', 10000)",
 }
 t2 = {
     "source": "idle",
     "target": "reserved",
     "trigger": "reserve30",
-    "effect": "start_30 ; start_timer('t30', 1800000)",
+    "effect": "start_30 ; start_timer('t30', 10000)",
 }
 t3 = {
     "source": "reserved",
@@ -228,7 +228,9 @@ logger.addHandler(ch)
 
 charger = ChargerStateMachine()
 charger_machine = stmpy.Machine(
-    transitions=[t0, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10], name="charger", obj=charger
+    transitions=[t0, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10],
+    name="charger",
+    obj=charger,
 )
 charger.stm = charger_machine
 driver = stmpy.Driver()
