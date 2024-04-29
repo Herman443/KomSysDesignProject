@@ -86,55 +86,55 @@ t1 = {
     "source": "idle",
     "target": "reserved",
     "trigger": "reserve15",
-    "effect": "start_15",
+    "effect": "start_15 ; start_timer('t15', 900000)",
 }
 t2 = {
     "source": "idle",
     "target": "reserved",
     "trigger": "reserve30",
-    "effect": "start_30",
+    "effect": "start_30 ; start_timer('t30', 1800000)",
 }
 t3 = {
     "source": "reserved",
     "target": "charging",
     "trigger": "button_press",
-    "effect": "start_charging",
+    "effect": "start_charging ; stop_timer('t15') ; stop_timer('t30') ; stop_timer('t1')",
 }
 t4 = {
     "source": "idle",
     "target": "awaiting",
     "trigger": "start_charge",
-    "effect": "start_1 ; start_timer('t1', 60000)",
+    "effect": "start_1 ; start_timer('t1', 10000)",
 }
 t5 = {
     "source": "awaiting",
     "target": "charging",
     "trigger": "button_press",
-    "effect": "start_charging",
+    "effect": "start_charging  ; stop_timer('t15') ; stop_timer('t30') ; stop_timer('t1')",
 }
 t6 = {
     "source": "reserved",
     "target": "idle",
     "trigger": "t15",
-    "effect": "available ; start_timer('t15', 900000)",
+    "effect": "available ; stop_timer('t15') ; stop_timer('t30') ; stop_timer('t1')",
 }
 t7 = {
     "source": "reserved",
     "target": "idle",
     "trigger": "t30",
-    "effect": "available ; start_timer('t30', 1800000)",
+    "effect": "available ; stop_timer('t15') ; stop_timer('t30') ; stop_timer('t1')",
 }
 t8 = {
     "source": "awaiting",
     "target": "idle",
     "trigger": "t1",
-    "effect": "available",
+    "effect": "available ; stop_timer('t15') ; stop_timer('t30') ; stop_timer('t1')",
 }
 t9 = {
     "source": "charging",
     "target": "idle",
     "trigger": "button_press",
-    "effect": "stop_charging",
+    "effect": "stop_charging ; stop_timer('t15') ; stop_timer('t30') ; stop_timer('t1')",
 }
 
 
