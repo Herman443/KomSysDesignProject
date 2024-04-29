@@ -15,3 +15,5 @@ With potential economic benefits for both owners and users, we think the incenti
 systems like ours is on the rise as well.
 
 This application is a simplified representation of an eventual final product, presented by using a Raspberry Pi with a Sense HAT.
+
+NB: All the folders in this repository are packages for python applications, so there is no need to open them. All useful files are outside folders
