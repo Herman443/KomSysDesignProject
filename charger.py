@@ -134,6 +134,13 @@ t9 = {
     "effect": "stop_charging ; stop_timer('t15') ; stop_timer('t30') ; stop_timer('t1')",
 }
 
+t10 = {
+    "source": "charging",
+    "target": "idle",
+    "trigger": "stop_charge",
+    "effect": "stop_charging ; stop_timer('t15') ; stop_timer('t30') ; stop_timer('t1')",
+}
+
 
 class ChargerComponent:
     def on_connect(self, client, version, userdata, flags, rc):
@@ -221,7 +228,7 @@ logger.addHandler(ch)
 
 charger = ChargerStateMachine()
 charger_machine = stmpy.Machine(
-    transitions=[t0, t1, t2, t3, t4, t5, t6, t7, t8, t9], name="charger", obj=charger
+    transitions=[t0, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10], name="charger", obj=charger
 )
 charger.stm = charger_machine
 driver = stmpy.Driver()
