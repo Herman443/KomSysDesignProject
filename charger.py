@@ -30,25 +30,28 @@ class ChargerStateMachine:
     def __init__(self):
         print("State machine init done!")
         global sense
-        self.sense = sense
+        sense.clear(green)
         global available
         available = 1
 
     def start_1(self):
         self.stm.start_timer("t1", 60000)  # 1 min
-        self.sense.clear(blue)
+        global sense
+        sense.clear(blue)
         global available
         available = 0
 
     def start_15(self):
         self.stm.start_timer("t15", 900000)  # 15 min
-        self.sense.clear(yellow)
+        global sense
+        sense.clear(yellow)
         global available
         available = 0
 
     def start_30(self):
         self.stm.start_timer("t30", 1800000)  # 30 min
-        self.sense.clear(yellow)
+        global sense
+        sense.clear(yellow)
         global available
         available = 0
 
@@ -61,7 +64,8 @@ class ChargerStateMachine:
         available = 1
 
     def start_charging(self):
-        self.sense.clear(red)
+        global sense
+        sense.clear(red)
         self.stm.stop_timer("t1")
         self.stm.stop_timer("t15")
         self.stm.stop_timer("t30")
@@ -70,7 +74,8 @@ class ChargerStateMachine:
         available = 0
 
     def stop_charging(self):
-        self.sense.clear(green)
+        global sense
+        sense.clear(green)
         ChargerComponent.publish_command({"command": "charging_stopped"})
         global available
         available = 1
