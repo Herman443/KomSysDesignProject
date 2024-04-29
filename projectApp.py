@@ -66,6 +66,12 @@ class AppComponent:
                 self.app.setLabel("label", f"Reservation ran out")
             except Exception as err:
                 self._logger.error("Invalid arguments to topic. {}".format(err))
+        elif topic == "plug_in":
+            try:
+                self.app.clearLabel("label")
+                self.app.setLabel("label", f"Plug in car")
+            except Exception as err:
+                self._logger.error("Invalid arguments to topic. {}".format(err))
         else:
             self._logger.error("Unknown topic {}. Message ignored.".format(topic))
 

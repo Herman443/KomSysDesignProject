@@ -37,6 +37,7 @@ class ChargerStateMachine:
     def start_1(self):
         global sense
         sense.clear(blue)
+        client.publish_command({"command": "plug_in"})
         global available
         available = 0
 

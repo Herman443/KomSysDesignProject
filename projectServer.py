@@ -130,6 +130,12 @@ class ServerComponent:
                 self.publish_command(json.loads(melding), "app")
             except Exception as err:
                 self._logger.error("Invalid arguments to command. {}".format(err))
+        elif command == "plug_in":
+            try:
+                melding = '{"topic":"plug_in"}'
+                self.publish_command(json.loads(melding), "app")
+            except Exception as err:
+                self._logger.error("Invalid arguments to command. {}".format(err))
         else:
             self._logger.error("Unknown command {}. Message ignored.".format(command))
 
