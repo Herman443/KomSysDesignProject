@@ -35,21 +35,18 @@ class ChargerStateMachine:
         available = 1
 
     def start_1(self):
-        self.stm.start_timer("t1", 60000)  # 1 min
         global sense
         sense.clear(blue)
         global available
         available = 0
 
     def start_15(self):
-        self.stm.start_timer("t15", 900000)  # 15 min
         global sense
         sense.clear(yellow)
         global available
         available = 0
 
     def start_30(self):
-        self.stm.start_timer("t30", 1800000)  # 30 min
         global sense
         sense.clear(yellow)
         global available
@@ -105,7 +102,7 @@ t4 = {
     "source": "idle",
     "target": "awaiting",
     "trigger": "start_charge",
-    "effect": "start_1",
+    "effect": "start_1 ; start_timer('t1', 60000)",
 }
 t5 = {
     "source": "awaiting",
@@ -117,13 +114,13 @@ t6 = {
     "source": "reserved",
     "target": "idle",
     "trigger": "t15",
-    "effect": "available",
+    "effect": "available ; start_timer('t15', 900000)",
 }
 t7 = {
     "source": "reserved",
     "target": "idle",
     "trigger": "t30",
-    "effect": "available",
+    "effect": "available ; start_timer('t30', 1800000)",
 }
 t8 = {
     "source": "awaiting",
