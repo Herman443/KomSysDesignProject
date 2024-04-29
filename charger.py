@@ -164,7 +164,7 @@ class ChargerComponent:
             return
         command = payload.get("command")
         self._logger.debug("command of message is {}".format(command))
-        if command == "reserve":
+        if "reserve" in command:
             try:
                 global available
                 print(available)
@@ -172,10 +172,9 @@ class ChargerComponent:
                     self.publish_command({"command": "unavailable"})
                 else:
                     self.publish_command({"command": "reserved"})
-                    time = json.dumps(payload["time"])
-                    if time == "15":
+                    if command == "reserve15":
                         self.stm_driver.send("reserve15", "charger", [], {})
-                    elif time == "30":
+                    else:
                         self.stm_driver.send("reserve30", "charger", [], {})
             except Exception as err:
                 self._logger.error("Invalid arguments to command. {}".format(err))

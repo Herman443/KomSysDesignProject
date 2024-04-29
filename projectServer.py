@@ -78,13 +78,13 @@ class ServerComponent:
                 self._logger.error("Invalid arguments to command. {}".format(err))
         elif command == "reserve_15":
             try:
-                melding = '{"command":"reserve", "time":"15"}'
+                melding = '{"command":"reserve15"}'
                 self.publish_command(json.loads(melding), "charger")
             except Exception as err:
                 self._logger.error("Invalid arguments to command. {}".format(err))
         elif command == "reserve_30":
             try:
-                melding = '{"command":"reserve", "time":"30"}'
+                melding = '{"command":"reserve30"}'
                 self.publish_command(json.loads(melding), "charger")
             except Exception as err:
                 self._logger.error("Invalid arguments to command. {}".format(err))
